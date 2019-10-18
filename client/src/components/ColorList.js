@@ -22,7 +22,6 @@ const ColorList = ({colors, updateColors}) => {
   };
   
   const saveEdit = ( colorId) => {
-    // debugger
     // e.preventDefault();
     // Make a put request to save your updated color
     // think about where will you get the id from...
@@ -31,7 +30,6 @@ const ColorList = ({colors, updateColors}) => {
     axiosWithAuth().put(`http://localhost:5000/api/colors/${colorId}`,
     colorToEdit)
     .then(() => {
-      // console.log(response.data)
       setColorId(null)
     })
     .catch(err => console.log(err))
@@ -44,7 +42,7 @@ const ColorList = ({colors, updateColors}) => {
       updateColors(colors.filter(color => color.id !== response.data))
     })
   };
-  // debugger
+  
   return (
     <div className="colors-wrap">
       <p>colors</p>
@@ -70,7 +68,7 @@ const ColorList = ({colors, updateColors}) => {
       {addFriend && (
         <AddColor />
       )}
-      
+
       {editing && (
         <form onSubmit={() => saveEdit(colorId)}>
           <legend>edit color</legend>
