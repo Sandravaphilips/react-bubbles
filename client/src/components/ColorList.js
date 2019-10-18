@@ -17,8 +17,7 @@ const ColorList = ({colors, updateColors}) => {
   const editColor = color => {
     setEditing(true);
     setColorToEdit(color);
-    const newColor = colors.find(colorEdit => color === colorEdit)
-    setColorId(newColor.id)
+    setColorId(color.id)
   };
   
   const saveEdit = ( colorId) => {
