@@ -1,43 +1,62 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axiosWithAuth from "../axios";
+import AddColor from "./AddColor";
 
 const initialColor = {
   color: "",
   code: { hex: "" }
 };
 
-const ColorList = ({ colors, updateColors }) => {
-  console.log(colors);
+const ColorList = ({colors, updateColors}) => {
+  // console.log(colors);
   const [editing, setEditing] = useState(false);
   const [colorToEdit, setColorToEdit] = useState(initialColor);
+  const [colorId, setColorId] = useState(null);
+  const [addFriend, setAddFriend] = useState(false);
 
   const editColor = color => {
     setEditing(true);
     setColorToEdit(color);
+    setColorId(color.id)
   };
-
-  const saveEdit = e => {
-    e.preventDefault();
+  
+  const saveEdit = ( colorId) => {
+    // e.preventDefault();
     // Make a put request to save your updated color
     // think about where will you get the id from...
     // where is is saved right now?
+
+    if(!colorToEdit.name || !colorToEdit.code.hex) {
+      return
+    }
+
+    axiosWithAuth().put(`http://localhost:5000/api/colors/${colorId}`,
+    colorToEdit)
+    .then(() => {
+      setColorId(null)
+    })
+    .catch(err => console.log(err))
   };
 
   const deleteColor = color => {
     // make a delete request to delete this color
+    axiosWithAuth().delete(`http://localhost:5000/api/colors/${color.id}`)
+    .then(response => {
+      updateColors(colors.filter(color => color.id !== response.data))
+    })
   };
-
+  
   return (
     <div className="colors-wrap">
       <p>colors</p>
       <ul>
         {colors.map(color => (
-          <li key={color.color} onClick={() => editColor(color)}>
+          <li key={color.color} >
             <span>
               <span className="delete" onClick={() => deleteColor(color)}>
                 x
               </span>{" "}
-              {color.color}
+              <span onClick={() => editColor(color)} >{color.color}</span>
             </span>
             <div
               className="color-box"
@@ -46,13 +65,20 @@ const ColorList = ({ colors, updateColors }) => {
           </li>
         ))}
       </ul>
+
+      <button onClick={() => setAddFriend(true)} >Add Color</button>
+
+      {addFriend && (
+        <AddColor setAddFriend={setAddFriend} />
+      )}
+
       {editing && (
-        <form onSubmit={saveEdit}>
+        <form onSubmit={() => saveEdit(colorId)}>
           <legend>edit color</legend>
           <label>
             color name:
             <input
-              onChange={e =>
+              onChange={e => 
                 setColorToEdit({ ...colorToEdit, color: e.target.value })
               }
               value={colorToEdit.color}
