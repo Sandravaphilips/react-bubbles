@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axiosWithAuth from "../axios";
+import AddColor from "./AddColor";
 
 const initialColor = {
   color: "",
@@ -10,7 +11,8 @@ const ColorList = ({colors, updateColors}) => {
   // console.log(colors);
   const [editing, setEditing] = useState(false);
   const [colorToEdit, setColorToEdit] = useState(initialColor);
-  const [colorId, setColorId] = useState(null)
+  const [colorId, setColorId] = useState(null);
+  const [addFriend, setAddFriend] = useState(false);
 
   const editColor = color => {
     setEditing(true);
@@ -62,8 +64,15 @@ const ColorList = ({colors, updateColors}) => {
           </li>
         ))}
       </ul>
+
+      <button onClick={() => setAddFriend(true)} >Add Color</button>
+
+      {addFriend && (
+        <AddColor />
+      )}
+      
       {editing && (
-        <form onSubmit={saveEdit(colorId)}>
+        <form onSubmit={() => saveEdit(colorId)}>
           <legend>edit color</legend>
           <label>
             color name:
