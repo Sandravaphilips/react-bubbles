@@ -26,6 +26,10 @@ const ColorList = ({colors, updateColors}) => {
     // think about where will you get the id from...
     // where is is saved right now?
 
+    if(!colorToEdit.name || !colorToEdit.code.hex) {
+      return
+    }
+
     axiosWithAuth().put(`http://localhost:5000/api/colors/${colorId}`,
     colorToEdit)
     .then(() => {
@@ -65,7 +69,7 @@ const ColorList = ({colors, updateColors}) => {
       <button onClick={() => setAddFriend(true)} >Add Color</button>
 
       {addFriend && (
-        <AddColor />
+        <AddColor setAddFriend={setAddFriend} />
       )}
 
       {editing && (

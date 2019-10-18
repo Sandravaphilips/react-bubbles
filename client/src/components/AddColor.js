@@ -5,7 +5,7 @@ const initialColorForm = {
     colorName: '',
     hexCode: ''
 }
-export default function AddColor() {
+export default function AddColor({setAddFriend}) {
     const [colorForm, setColorForm] = useState(initialColorForm);
 
     const onNameChange = e => {
@@ -33,6 +33,11 @@ export default function AddColor() {
             },
             id: Date.now()
         };
+        
+        if(!colorForm.name || !colorForm.code.hexCode) {
+            return;
+        }
+
         axiosWithAuth().post('http://localhost:5000/api/colors', newColor)
         .then(response => console.log(response))
         .catch(err=> console.log(err))
@@ -48,6 +53,8 @@ export default function AddColor() {
             </label><br />
 
             <input type='submit' />
+
+            <button style={{width: '20%'}} onClick={() => setAddFriend(false)}>cancel</button>
         </form>
     )
 }
